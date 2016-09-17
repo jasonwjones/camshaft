@@ -53,6 +53,9 @@ public class PullCommand {
 	@Parameter(names = {"--line-per-header"}, description = "Print column headers with one tuple member per line instead of combined")
 	private boolean linePerHeader = false;
 	
+	@Parameter(names = {"--maximum-fraction-digits", "--Mf"}, description = "Maximum fraction digits to show after decimal")
+	private int maximumFractionDigits = 6;
+	
 	@DynamicParameter(names = "-D", description = "Dynamic parameters go here")
 	private Map<String, String> params = new HashMap<String, String>();
 
@@ -130,6 +133,10 @@ public class PullCommand {
 	
 	public String getTupleSeparator() {
 		return tupleSeparator;
+	}
+
+	public int getMaximumFractionDigits() {
+		return maximumFractionDigits;
 	}
 	
 }

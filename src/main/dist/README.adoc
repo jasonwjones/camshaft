@@ -48,6 +48,12 @@ up with the data below it. All of the behavior is customizable.
 
 There are numerous options available that control Camshaft's behavior and formatting. You can always run the program with no arguments in order to get a list of all current flags and alternative names you can pass.
 
+`--query=`
+
+You can specify either an MDX query, or a path to a specific file containing just a single MDX
+query in it. If the given query turns out to be a file, then it'll be laoded and used. 
+
+
 `--no-header`
 
 This suppresses the header rows in case you don't need them. This would cause the following output:
@@ -149,6 +155,12 @@ something else. For example, a forward slash:
 You can specify spaces on this commaond argument by putting the whole argument in double quotes, 
 such as `--tuple-separator=" / "`. You may need to escape the quotes with a backslash.
 
+`--maximum-fraction-digits=X`
+
+You can specify the maximum number of digits that should be displayed after a decimal. By default
+this value is 6. You may wish to specify 2 if all of the values in the cube are currency or otherwise
+do not need more detail.
+
 ## Dynamic Parameters
 
 Some output engines have other options that can be specified as follows:
@@ -190,6 +202,12 @@ Distribution binaries are free to use with no warranty implied or given. Current
 but the binaries may be considered useable under the Apache Software License, verion 2.0.
 
 ## Version History
+
+### 1.0.2
+
+* Fix option to read query from file
+* Add option to affect printing of numbers (scientific notation/other): --maximum-fraction-digits
+* Fix printing so that large/detailed numbers won't print in scientific notation
 
 ### 1.0.1
 

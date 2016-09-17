@@ -1,11 +1,14 @@
 package com.saxifrages.hyperion.camshaft;
 
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.nio.charset.Charset;
 import java.util.Properties;
 
+import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -58,12 +61,19 @@ public class Camshaft {
 		String db = pull.getDatabase();
 		String query = pull.getQuery();
 		
+		File queryFile = new File(query);
+		if (queryFile.exists()) {
+			logger.info("Given query was a file, reading query from file");
+			query = FileUtils.readFileToString(queryFile, Charset.defaultCharset());
+		}
+		
 		PrintOptions printOptions = new PrintOptions();
 		printOptions.setLinePerHeaderTupleMember(pull.isLinePerHeader());
 		printOptions.setSuppressHeader(pull.isSuppressHeader());
 		printOptions.setMissingText(pull.getMissingText());
 		printOptions.setIndentHeader(!pull.isNoIdentHeader());
 		printOptions.setHeaderTupleSeparator(pull.getTupleSeparator());
+		printOptions.setMaximumFractionDigits(pull.getMaximumFractionDigits());
 		
 		// Default is to print to console; override if file specified
 		OutputStream outputStream = System.out;

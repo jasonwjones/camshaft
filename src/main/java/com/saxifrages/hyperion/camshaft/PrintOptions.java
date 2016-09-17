@@ -2,8 +2,6 @@ package com.saxifrages.hyperion.camshaft;
 
 public class PrintOptions {
 
-	//private String delimiter = "\t";
-	
 	private boolean suppressHeader = false;
 	
 	private String noAccessText = "#NoAccess";
@@ -16,13 +14,7 @@ public class PrintOptions {
 	
 	private boolean linePerHeaderTupleMember = false;
 	
-//	public String getDelimiter() {
-//		return delimiter;
-//	}
-//
-//	public void setDelimiter(String delimiter) {
-//		this.delimiter = delimiter;
-//	}
+	private int maximumFractionDigits = 6;
 
 	public boolean isSuppressHeader() {
 		return suppressHeader;
@@ -70,6 +62,14 @@ public class PrintOptions {
 
 	public void setLinePerHeaderTupleMember(boolean linePerHeaderTupleMember) {
 		this.linePerHeaderTupleMember = linePerHeaderTupleMember;
+	}
+
+	public int getMaximumFractionDigits() {
+		return maximumFractionDigits;
+	}
+
+	public void setMaximumFractionDigits(int maximumFractionDigits) {
+		this.maximumFractionDigits = maximumFractionDigits;
 	}
 	
 }

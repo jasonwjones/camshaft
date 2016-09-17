@@ -1,5 +1,9 @@
 package com.saxifrages.hyperion.camshaft;
 
+import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
+import java.util.Locale;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -14,9 +18,13 @@ public class DataSetPrinter {
 	
 	private PrintOptions options;
 	
+	private DecimalFormat df;
+	
 	public DataSetPrinter(PrintOptions options) {
 		logger.info("Built data set printer");
 		this.options = options;
+		this.df = new DecimalFormat("0", DecimalFormatSymbols.getInstance(Locale.ENGLISH));
+		df.setMaximumFractionDigits(options.getMaximumFractionDigits());
 	}
 	
 	public void printMdDataSetInGridForm(IEssMdDataSet mddata, CamshaftOutputDelegate printStream) throws EssException {
@@ -86,7 +94,7 @@ public class DataSetPrinter {
 						printStream.addValue(fmtdCellTxtVal);
 					} else {
 						double val = mddata.getCellValue(k);
-						printStream.addValue(Double.toString(val));
+						printStream.addValue(df.format(val));
 					}
 				}
 				k++;

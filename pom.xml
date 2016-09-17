@@ -3,7 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.saxifrages.hyperion.camshaft</groupId>
 	<artifactId>camshaft</artifactId>
-	<version>1.0.1</version>
+	<version>1.0.2</version>
 	<name>Camshaft MDX Query Tool</name>
 	<description>Camshaft is command-line utility for executing MDX queries against a Hyperion Essbase server and returning the results in a format more conducive to parsing than all of the horsehit that surrounds them in MaxL.</description>
 	<url>http://www.saxifrages.com/products/camshaft</url>
@@ -52,6 +52,11 @@
 			<groupId>ch.qos.logback</groupId>
 			<artifactId>logback-classic</artifactId>
 			<version>1.1.2</version>
+		</dependency>
+		<dependency>
+			<groupId>commons-io</groupId>
+			<artifactId>commons-io</artifactId>
+			<version>2.5</version>
 		</dependency>
 	</dependencies>
 </project>

@@ -1,12 +1,17 @@
 package com.saxifrages.hyperion.camshaft;
 
+import java.io.File;
+
 import org.junit.Before;
 import org.junit.Test;
 
 public class CamshaftTest {
 
+	private String testQueryFile;
+	
 	@Before
 	public void setUp() throws Exception {
+		testQueryFile = getClass().getResource("/asosamp-sample-test-01.mdx").getFile();
 	}
 
 	@Test
@@ -19,10 +24,15 @@ public class CamshaftTest {
 			"--database=Sample",
 			//"--query=SELECT CROSSJOIN({[Jan], [Feb], [Mar]}, {[Curr Year], [Prev Year]}) ON COLUMNS, {[Measures].Levels(0).members} ON ROWS, {[Transaction Type].Levels(0).members} ON PAGES FROM [ASOSamp].[Sample]"
 			//"--query=SELECT CROSSJOIN({[Jan], [Feb]}, {[Curr Year], [Prev Year]}) ON COLUMNS, {[Measures].Levels(0).members} ON ROWS FROM [ASOSamp].[Sample]",
-			"--query=SELECT CROSSJOIN({[Jan]}, {[Curr Year], [Prev Year]}) ON COLUMNS, {[Original Price], [Price Paid], [Returns], [Units]} ON ROWS FROM [ASOSamp].[Sample]",
+			
+			"--query=" + testQueryFile,
+			
+			//"--query=SELECT CROSSJOIN({[Jan]}, {[Curr Year], [Prev Year]}) ON COLUMNS, {[Original Price], [Price Paid], [Returns], [Units]} ON ROWS FROM [ASOSamp].[Sample]",
 			"-DformatString=%-24s",
 			//"--tuple-separator=\" / \""
-			"--tuple-separator=/"
+			"--tuple-separator=/",
+			//"--maximum-fraction-digits=2"
+			
 			//"-Ddelimiter=,",
 			//"--line-per-header",
 			//"--no-header",
