@@ -1,0 +1,12 @@
+SELECT {} ON AXIS(0),
+Product.Members DIMENSION PROPERTIES
+PROPERTY_EXPR
+(
+Product,
+MEMBER_ALIAS,
+Currentaxismember(),
+"Alias"
+)
+
+ON ROWS
+FROM Sample.Basic

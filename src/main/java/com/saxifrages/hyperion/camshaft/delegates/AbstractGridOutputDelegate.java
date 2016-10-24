@@ -15,13 +15,13 @@ import com.saxifrages.hyperion.camshaft.CamshaftOutputDelegate;
 public abstract class AbstractGridOutputDelegate implements CamshaftOutputDelegate {
 
 	public static final String DEFAULT_SEPARATOR = ", ";
-	
+
 	public static final Properties NO_PROPS = new Properties();
-	
+
 	public static void outputArray(String[] items, PrintStream printStream) {
 		outputArray(items, printStream, DEFAULT_SEPARATOR);
 	}
-	
+
 	public static void outputArray(String[] items, PrintStream printStream, String separator) {
 		if (items.length == 1) {
 			printStream.print(items[0]);

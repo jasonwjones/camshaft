@@ -3,7 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.saxifrages.hyperion.camshaft</groupId>
 	<artifactId>camshaft</artifactId>
-	<version>1.0.2</version>
+	<version>1.0.4-SNAPSHOT</version>
 	<name>Camshaft MDX Query Tool</name>
 	<description>Camshaft is command-line utility for executing MDX queries against a Hyperion Essbase server and returning the results in a format more conducive to parsing than all of the horsehit that surrounds them in MaxL.</description>
 	<url>http://www.saxifrages.com/products/camshaft</url>
@@ -30,12 +30,25 @@
 			</plugin>
 		</plugins>
 	</build>
+	
+	<distributionManagement>
+		<repository>
+			<id>nexus-jwj</id>
+			<name>Releases</name>
+			<url>http://nexus.jones-systems.com:8081/nexus/content/repositories/releases</url>
+		</repository>
+		<snapshotRepository>
+			<id>nexus-jwj</id>
+			<name>Snapshot</name>
+			<url>http://nexus.jones-systems.com:8081/nexus/content/repositories/snapshots</url>
+		</snapshotRepository>
+	</distributionManagement>
 
 	<dependencies>
 		<dependency>
 			<groupId>com.saxifrages.essbase</groupId>
 			<artifactId>essbase-utils</artifactId>
-			<version>11.1.2.3</version>
+			<version>1.2.2</version>
 		</dependency>
 		<dependency>
 			<groupId>com.beust</groupId>

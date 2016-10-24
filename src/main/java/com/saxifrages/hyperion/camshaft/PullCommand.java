@@ -20,11 +20,17 @@ public class PullCommand {
 	@Parameter(names = "--password", description = "Password for user",  required = true)
 	private String password;
 	
+	@Parameter(names = "--encoded", description = "Is password encoded?",  required = false)
+	private boolean passwordIsEncoded = false;
+	
 	@Parameter(names = {"--app", "--application"}, description = "Essbase app", required = true)
 	private String application;
 	
 	@Parameter(names = {"--database", "--db"}, description = "Essbase cube", required = true)
 	private String database;
+	
+	@Parameter(names = {"--config"}, description = "Configuration file", required = false)
+	private String configFile; 
 	
 	@Parameter(names = {"--query"}, description = "Query to execute, or filename containing query", required = true)
 	private String query;
@@ -54,7 +60,10 @@ public class PullCommand {
 	private boolean linePerHeader = false;
 	
 	@Parameter(names = {"--maximum-fraction-digits", "--Mf"}, description = "Maximum fraction digits to show after decimal")
-	private int maximumFractionDigits = 6;
+	private int maximumFractionDigits = 4;
+	
+	@Parameter(names = {"--print-property-names"}, description = "Print names for PROP_EXPR properties")
+	private boolean printPropertyNames = false;
 	
 	@DynamicParameter(names = "-D", description = "Dynamic parameters go here")
 	private Map<String, String> params = new HashMap<String, String>();
@@ -137,6 +146,18 @@ public class PullCommand {
 
 	public int getMaximumFractionDigits() {
 		return maximumFractionDigits;
+	}
+
+	public String getConfigFile() {
+		return configFile;
+	}
+
+	public boolean isPrintPropertyNames() {
+		return printPropertyNames;
+	}
+
+	public void setPrintPropertyNames(boolean printPropertyNames) {
+		this.printPropertyNames = printPropertyNames;
 	}
 	
 }

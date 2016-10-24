@@ -1,5 +1,6 @@
 package com.saxifrages.hyperion.camshaft;
 
+import java.math.RoundingMode;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.util.Locale;
@@ -21,9 +22,9 @@ public class DataSetPrinter {
 	private DecimalFormat df;
 	
 	public DataSetPrinter(PrintOptions options) {
-		logger.info("Built data set printer");
 		this.options = options;
 		this.df = new DecimalFormat("0", DecimalFormatSymbols.getInstance(Locale.ENGLISH));
+		//df.setRoundingMode(RoundingMode.DOWN);
 		df.setMaximumFractionDigits(options.getMaximumFractionDigits());
 	}
 	
@@ -32,10 +33,16 @@ public class DataSetPrinter {
 
 		int cols = axis[1].getTupleCount();
 		int rows = axis[2].getTupleCount();
+				
+		logger.info("Clusters on 2: {}", axis[2].getAllClusters().length);
 		
-		//logger.info("Rows: {}, cols {}", rows, cols);
+		//axis[2].getAllClusters()[0].
+		logger.info("Rows {}, columns {}", rows, cols);
+		
 		IEssMdMember[] mem = axis[2].getAllTupleMembers(0);
-
+	
+		logger.info("Tuples on axis: {}", mem.length);
+		
 		printStream.startOutput();
 		
 		if (!options.isSuppressHeader()) {
@@ -64,6 +71,7 @@ public class DataSetPrinter {
 					}
 					for (int j = 0; j < cols; j++) {
 						printStream.addValue(axis[1].getAllTupleMembers(j)[line].getName());
+						//printStream.addValue(axis[1].getAllTupleMembers(j)[line].get);
 					}
 					printStream.endRow();
 				}
@@ -76,13 +84,6 @@ public class DataSetPrinter {
 			printStream.addRow();
 			mem = axis[2].getAllTupleMembers(i);
 			printTuple(mem, printStream);
-//			for (int l = 0; l < mem.length; l++) {
-//				int propcnt = mem[l].getCountProperties();
-//				for (int propInd = 0; propInd < propcnt; propInd++) {
-//					IEssValueAny propval = mem[l].getPropertyValueAny(propInd);
-//					printStream.print(mem[l].getPropertyName(propInd) + ", " + propval + " ");
-//				}
-//			}
 			for (int j = 0; j < cols; j++) {
 				if (mddata.isMissingCell(k)) {
 					printStream.addValue(options.getMissingText());
@@ -106,12 +107,49 @@ public class DataSetPrinter {
 
 	private void printTuple(IEssMdMember[] mem, CamshaftOutputDelegate printStream) throws EssException {
 		StringBuilder sb = new StringBuilder();
+		
 		for (int i = 0; i < mem.length - 1; i++) {
 			sb.append(mem[i].getName());
 			sb.append(options.getHeaderTupleSeparator());
 		}
 		sb.append(mem[mem.length - 1].getName());
-		printStream.addValue(sb.toString());
+		
+		boolean needCleanupPrint = true;
+		
+		if (options.isPrintProperties()) {
+			IEssMdMember mdMember = mem[mem.length - 1];
+			if (!options.isPrintPropertiesSeparately()) {
+				if (mdMember.getCountProperties() > 0) {
+					sb.append(options.getHeaderTupleSeparator());
+					String[] propNames = mdMember.getPropertyNames();
+					for (int index = 0; index < propNames.length; index++) {
+						if (options.isPrintPropertyNames()) {
+							sb.append(propNames[index]);
+							sb.append(options.getHeaderTupleSeparator());
+						}
+						sb.append(mdMember.getPropertyValueAny(index));
+						sb.append(options.getHeaderTupleSeparator());
+					}
+				}
+			} else {
+				printStream.addValue(sb.toString());
+				needCleanupPrint = false;
+				if (mdMember.getCountProperties() > 0) {
+					String[] propNames = mdMember.getPropertyNames();
+					for (int index = 0; index < propNames.length; index++) {
+						if (options.isPrintPropertyNames()) {
+							printStream.addValue(propNames[index]);
+						}
+						printStream.addValue(mdMember.getPropertyValueAny(index).toString());
+					}
+
+				}
+			}
+		}
+		
+		if (needCleanupPrint) {
+			printStream.addValue(sb.toString());
+		}
 	}
 	
 }

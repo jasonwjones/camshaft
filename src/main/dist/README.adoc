@@ -203,6 +203,13 @@ but the binaries may be considered useable under the Apache Software License, ve
 
 ## Version History
 
+### 1.0.3
+
+* Option to print properties
+* Option to print property names
+* Option to specify alias table
+* Option to specify revert to member name if no alias in specified alias table
+
 ### 1.0.2
 
 * Fix option to read query from file
