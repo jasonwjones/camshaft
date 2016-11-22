@@ -66,7 +66,7 @@ public class Camshaft {
 		
 		Properties printOpts = new PrintOptionFactory().defaultPrintOptions();
 		
-		PrintOptions printOptions = new PrintOptions();
+		BasicPrintOptions printOptions = new BasicPrintOptions();
 
 		if (pull.getConfigFile() != null) {
 			File propFile = new File(pull.getConfigFile());
@@ -102,7 +102,7 @@ public class Camshaft {
 			Camshaft.pull(server, username, password, app, db, query, printOptions, delegate);
 
 		} catch (Exception e) {
-			logger.error("Error generating data: {}", e.getMessage());
+			logger.error("Error generating data: {}", e);
 			System.exit(1);
 		} finally {
 			outputStream.close();

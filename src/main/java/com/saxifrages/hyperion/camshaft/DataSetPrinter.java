@@ -31,15 +31,18 @@ public class DataSetPrinter {
 	public void printMdDataSetInGridForm(IEssMdDataSet mddata, CamshaftOutputDelegate printStream) throws EssException {
 		IEssMdAxis[] axis = mddata.getAllAxes();
 
-		int cols = axis[1].getTupleCount();
-		int rows = axis[2].getTupleCount();
-				
-		logger.info("Clusters on 2: {}", axis[2].getAllClusters().length);
+		IEssMdAxis axis1 = axis[0];
+		IEssMdAxis axis2 = axis[1];
 		
-		//axis[2].getAllClusters()[0].
-		logger.info("Rows {}, columns {}", rows, cols);
+		if (axis1.isSlicerAxis()) {
+			axis1 = axis[1];
+			axis2 = axis[2];
+		}
 		
-		IEssMdMember[] mem = axis[2].getAllTupleMembers(0);
+		int cols = axis1.getTupleCount();
+		int rows = axis2.getTupleCount();
+						
+		IEssMdMember[] mem = axis2.getAllTupleMembers(0);
 	
 		logger.info("Tuples on axis: {}", mem.length);
 		
@@ -56,12 +59,12 @@ public class DataSetPrinter {
 				}
 				// prints the headers (columns) -- always axis 1, apparently
 				for (int j = 0; j < cols; j++) {
-					mem = axis[1].getAllTupleMembers(j);
+					mem = axis1.getAllTupleMembers(j);
 					printTuple(mem, printStream);
 				}
 				printStream.endRow();
 			} else {
-				int lines = axis[1].getAllTupleMembers(0).length;
+				int lines = axis1.getAllTupleMembers(0).length;
 				for (int line = 0; line < lines; line++) {
 					printStream.addRow();
 					if (options.isIndentHeader()) {
@@ -70,19 +73,20 @@ public class DataSetPrinter {
 						}
 					}
 					for (int j = 0; j < cols; j++) {
-						printStream.addValue(axis[1].getAllTupleMembers(j)[line].getName());
+						printStream.addValue(axis1.getAllTupleMembers(j)[line].getName());
 						//printStream.addValue(axis[1].getAllTupleMembers(j)[line].get);
 					}
 					printStream.endRow();
 				}
 			}
 		}
-		
+
+		// Now print the actual data in the result set
 		int k = 0;
 
 		for (int i = 0; i < rows; i++) {
 			printStream.addRow();
-			mem = axis[2].getAllTupleMembers(i);
+			mem = axis2.getAllTupleMembers(i);
 			printTuple(mem, printStream);
 			for (int j = 0; j < cols; j++) {
 				if (mddata.isMissingCell(k)) {
@@ -108,11 +112,17 @@ public class DataSetPrinter {
 	private void printTuple(IEssMdMember[] mem, CamshaftOutputDelegate printStream) throws EssException {
 		StringBuilder sb = new StringBuilder();
 		
-		for (int i = 0; i < mem.length - 1; i++) {
-			sb.append(mem[i].getName());
-			sb.append(options.getHeaderTupleSeparator());
-		}
-		sb.append(mem[mem.length - 1].getName());
+		if (options.isPrintTupleMemberSeparately()) {
+			for (int i = 0; i < mem.length; i++) {
+				printStream.addValue(mem[i].getName());
+			}
+		} else {
+			for (int i = 0; i < mem.length - 1; i++) {
+				sb.append(mem[i].getName());
+				sb.append(options.getHeaderTupleSeparator());
+			}
+			sb.append(mem[mem.length - 1].getName());
+		}		
 		
 		boolean needCleanupPrint = true;
 		
@@ -132,8 +142,11 @@ public class DataSetPrinter {
 					}
 				}
 			} else {
-				printStream.addValue(sb.toString());
-				needCleanupPrint = false;
+				if (!options.isPrintTupleMemberSeparately()) {
+					printStream.addValue(sb.toString());
+					needCleanupPrint = false;
+				}
+				
 				if (mdMember.getCountProperties() > 0) {
 					String[] propNames = mdMember.getPropertyNames();
 					for (int index = 0; index < propNames.length; index++) {
@@ -147,7 +160,7 @@ public class DataSetPrinter {
 			}
 		}
 		
-		if (needCleanupPrint) {
+		if (needCleanupPrint && !options.isPrintTupleMemberSeparately()) {
 			printStream.addValue(sb.toString());
 		}
 	}

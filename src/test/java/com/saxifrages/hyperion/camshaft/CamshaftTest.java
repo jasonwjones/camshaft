@@ -11,7 +11,8 @@ public class CamshaftTest {
 	
 	@Before
 	public void setUp() throws Exception {
-		testQueryFile = getClass().getResource("/asosamp-sample-test-04.mdx").getFile();
+		//testQueryFile = getClass().getResource("/asosamp-sample-test-02.mdx").getFile();
+		testQueryFile = getClass().getResource("/sample-basic-test-1.mdx").getFile();
 	}
 
 	@Test
