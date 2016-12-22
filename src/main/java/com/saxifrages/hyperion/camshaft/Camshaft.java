@@ -65,8 +65,7 @@ public class Camshaft {
 		}
 		
 		Properties printOpts = new PrintOptionFactory().defaultPrintOptions();
-		
-		BasicPrintOptions printOptions = new BasicPrintOptions();
+		BasicPrintOptions printOptions = new BasicPrintOptions(printOpts);
 
 		if (pull.getConfigFile() != null) {
 			File propFile = new File(pull.getConfigFile());

@@ -1,7 +1,5 @@
 package com.saxifrages.hyperion.camshaft;
 
-import java.io.File;
-
 import org.junit.Before;
 import org.junit.Test;
 

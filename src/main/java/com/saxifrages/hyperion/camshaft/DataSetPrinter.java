@@ -1,6 +1,5 @@
 package com.saxifrages.hyperion.camshaft;
 
-import java.math.RoundingMode;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.util.Locale;
