@@ -16,6 +16,8 @@ public interface PrintOptions {
 
 	int getMaximumFractionDigits();
 
+	int getMinimumFractionDigits();
+	
 	boolean isPrintProperties();
 
 	boolean isPrintPropertyNames();

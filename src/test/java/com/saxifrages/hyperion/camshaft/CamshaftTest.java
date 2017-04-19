@@ -1,22 +1,23 @@
 package com.saxifrages.hyperion.camshaft;
 
-import org.junit.Before;
-import org.junit.Test;
-
 public class CamshaftTest {
 
 	private String testQueryFile;
 	
-	@Before
 	public void setUp() throws Exception {
 		testQueryFile = getClass().getResource("/asosamp-sample-test-03.mdx").getFile();
 		//testQueryFile = getClass().getResource("/sample-basic-test-1.mdx").getFile();
 	}
 
-	@Test
+	public static void main(String[] args) throws Exception {
+		CamshaftTest test = new CamshaftTest();
+		test.setUp();
+		test.testMain();
+	}
+
 	public void testMain() throws Exception {
 		String[] args = {
-			"--server=epm11124", 
+			"--server=epmvirt11124", 
 			"--user=admin", 
 			"--password=password", 
 			"--app=Sample", 

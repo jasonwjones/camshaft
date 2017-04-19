@@ -1,9 +1,8 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.saxifrages.hyperion.camshaft</groupId>
 	<artifactId>camshaft</artifactId>
-	<version>1.0.5-SNAPSHOT</version>
+	<version>1.0.7-SNAPSHOT</version>
 	<name>Camshaft MDX Query Tool</name>
 	<description>Camshaft is command-line utility for executing MDX queries against a Hyperion Essbase server and returning the results in a format more conducive to parsing than all of the horsehit that surrounds them in MaxL.</description>
 	<url>http://www.saxifrages.com/products/camshaft</url>
@@ -11,7 +10,7 @@
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<maven.compiler.source>1.6</maven.compiler.source>
-		<maven.compiler.target>1.8</maven.compiler.target>
+		<maven.compiler.target>1.6</maven.compiler.target>
 	</properties>
 
 	<build>
@@ -52,6 +51,13 @@
 			<url>http://nexus.jasonwjones.com:8081/nexus/content/repositories/releases/</url>
 		</repository>
 	</repositories>
+	
+	<scm>
+		<connection>scm:git:git@github.com:jasonwjones/Camshaft.git</connection>
+		<developerConnection>scm:git:git@github.com:jasonwjones/Camshaft.git</developerConnection>
+		<url>git@github.com:jasonwjones/Camshaft.git</url>
+		<tag>Camshaft-1.0.6</tag>
+	</scm>
 
 	<dependencies>
 		<dependency>

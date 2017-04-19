@@ -5,38 +5,42 @@ import java.util.Properties;
 public class BasicPrintOptions implements PrintOptions {
 
 	private boolean suppressHeader = false;
-	
+
 	private String noAccessText = "#NoAccess";
-	
+
 	private String missingText = "#Missing";
 
 	private String headerTupleSeparator = ",";
-	
+
 	private boolean indentHeader = true;
-	
+
 	private boolean linePerHeaderTupleMember = false;
-	
+
 	private int maximumFractionDigits = 6;
 
+	private int minimumFractionDigits = 0;
+
 	private boolean printProperties = true;
-	
+
 	private boolean printPropertyNames = false;
-	
+
 	private boolean printTupleMemberSeparately = false;
-	
+
 	private boolean printPropertiesSeparately = false;
-	
+
 	public BasicPrintOptions() {
 	}
-	
+
 	public BasicPrintOptions(Properties properties) {
 		suppressHeader = Boolean.getBoolean(properties.getProperty("suppress-header", "false"));
 		noAccessText = properties.getProperty("no-access-text", "#NoAccess");
 		missingText = properties.getProperty("missing-text", "#Missing");
 		headerTupleSeparator = properties.getProperty("header-tuple-separator", ",");
 	}
-	
-	/* (non-Javadoc)
+
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see com.saxifrages.hyperion.camshaft.PrintOptions#isSuppressHeader()
 	 */
 	@Override
@@ -48,7 +52,9 @@ public class BasicPrintOptions implements PrintOptions {
 		this.suppressHeader = suppressHeader;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see com.saxifrages.hyperion.camshaft.PrintOptions#getNoAccessText()
 	 */
 	@Override
@@ -60,7 +66,9 @@ public class BasicPrintOptions implements PrintOptions {
 		this.noAccessText = noAccessText;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see com.saxifrages.hyperion.camshaft.PrintOptions#getMissingText()
 	 */
 	@Override
@@ -72,8 +80,11 @@ public class BasicPrintOptions implements PrintOptions {
 		this.missingText = missingText;
 	}
 
-	/* (non-Javadoc)
-	 * @see com.saxifrages.hyperion.camshaft.PrintOptions#getHeaderTupleSeparator()
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.saxifrages.hyperion.camshaft.PrintOptions#getHeaderTupleSeparator()
 	 */
 	@Override
 	public String getHeaderTupleSeparator() {
@@ -84,7 +95,9 @@ public class BasicPrintOptions implements PrintOptions {
 		this.headerTupleSeparator = headerTupleSeparator;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see com.saxifrages.hyperion.camshaft.PrintOptions#isIndentHeader()
 	 */
 	@Override
@@ -96,8 +109,12 @@ public class BasicPrintOptions implements PrintOptions {
 		this.indentHeader = indentHeader;
 	}
 
-	/* (non-Javadoc)
-	 * @see com.saxifrages.hyperion.camshaft.PrintOptions#isLinePerHeaderTupleMember()
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.saxifrages.hyperion.camshaft.PrintOptions#isLinePerHeaderTupleMember(
+	 * )
 	 */
 	@Override
 	public boolean isLinePerHeaderTupleMember() {
@@ -108,8 +125,11 @@ public class BasicPrintOptions implements PrintOptions {
 		this.linePerHeaderTupleMember = linePerHeaderTupleMember;
 	}
 
-	/* (non-Javadoc)
-	 * @see com.saxifrages.hyperion.camshaft.PrintOptions#getMaximumFractionDigits()
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.saxifrages.hyperion.camshaft.PrintOptions#getMaximumFractionDigits()
 	 */
 	@Override
 	public int getMaximumFractionDigits() {
@@ -120,7 +140,9 @@ public class BasicPrintOptions implements PrintOptions {
 		this.maximumFractionDigits = maximumFractionDigits;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see com.saxifrages.hyperion.camshaft.PrintOptions#isPrintProperties()
 	 */
 	@Override
@@ -132,7 +154,9 @@ public class BasicPrintOptions implements PrintOptions {
 		this.printProperties = printProperties;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see com.saxifrages.hyperion.camshaft.PrintOptions#isPrintPropertyNames()
 	 */
 	@Override
@@ -144,8 +168,12 @@ public class BasicPrintOptions implements PrintOptions {
 		this.printPropertyNames = printPropertyNames;
 	}
 
-	/* (non-Javadoc)
-	 * @see com.saxifrages.hyperion.camshaft.PrintOptions#isPrintPropertiesSeparately()
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.saxifrages.hyperion.camshaft.PrintOptions#isPrintPropertiesSeparately
+	 * ()
 	 */
 	@Override
 	public boolean isPrintPropertiesSeparately() {
@@ -156,8 +184,11 @@ public class BasicPrintOptions implements PrintOptions {
 		this.printPropertiesSeparately = printPropertiesSeparately;
 	}
 
-	/* (non-Javadoc)
-	 * @see com.saxifrages.hyperion.camshaft.PrintOptions#isPrintTupleMemberSeparately()
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.saxifrages.hyperion.camshaft.PrintOptions#
+	 * isPrintTupleMemberSeparately()
 	 */
 	@Override
 	public boolean isPrintTupleMemberSeparately() {
@@ -167,5 +198,14 @@ public class BasicPrintOptions implements PrintOptions {
 	public void setPrintTupleMemberSeparately(boolean printTupleMemberSeparately) {
 		this.printTupleMemberSeparately = printTupleMemberSeparately;
 	}
-	
+
+	@Override
+	public int getMinimumFractionDigits() {
+		return minimumFractionDigits;
+	}
+
+	public void setMinimumFractionDigits(int minimumFractionDigits) {
+		this.minimumFractionDigits = minimumFractionDigits;
+	}
+
 }

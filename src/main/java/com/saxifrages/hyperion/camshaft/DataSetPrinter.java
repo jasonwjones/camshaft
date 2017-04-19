@@ -24,7 +24,10 @@ public class DataSetPrinter {
 		this.options = options;
 		this.df = new DecimalFormat("0", DecimalFormatSymbols.getInstance(Locale.ENGLISH));
 		//df.setRoundingMode(RoundingMode.DOWN);
-		df.setMaximumFractionDigits(options.getMaximumFractionDigits());
+		if (options.getMaximumFractionDigits() != -1) {
+			df.setMaximumFractionDigits(options.getMaximumFractionDigits());
+		}
+		df.setMinimumFractionDigits(2);
 	}
 	
 	public void printMdDataSetInGridForm(IEssMdDataSet mddata, CamshaftOutputDelegate printStream) throws EssException {
