@@ -1,0 +1,6 @@
+SELECT
+ [Market].Members
+    DIMENSION PROPERTIES [Market].[LEVEL_NUMBER] on columns,
+ Filter ([Product].Members, Sales > 5000)
+    DIMENSION PROPERTIES [Product].[MEMBER_ALIAS] on rows
+from Sample.Basic

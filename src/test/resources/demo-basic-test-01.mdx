@@ -1,0 +1,6 @@
+SELECT
+{[South], [West]} ON Axis(0),
+NON EMPTY CrossJoin(Hierarchize([Product].Generations(3).Members), {[Accounts].[Margin], [Accounts].[Sales], [Accounts].[Total_Expenses]}) ON Axis(1), 
+NON EMPTY [Year].Generations(3).Members ON Axis(2)
+FROM [Demo.Basic]
+WHERE ([Budget])

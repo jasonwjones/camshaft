@@ -24,7 +24,7 @@ public class BasicPrintOptions implements PrintOptions {
 
 	private boolean printPropertyNames = false;
 
-	private boolean printTupleMemberSeparately = false;
+	private boolean printTupleMemberSeparately = true;
 
 	private boolean printPropertiesSeparately = false;
 

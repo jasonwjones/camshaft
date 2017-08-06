@@ -5,7 +5,9 @@ public class CamshaftTest {
 	private String testQueryFile;
 	
 	public void setUp() throws Exception {
-		testQueryFile = getClass().getResource("/asosamp-sample-test-03.mdx").getFile();
+		//testQueryFile = getClass().getResource("/asosamp-sample-test-03.mdx").getFile();
+		//testQueryFile = getClass().getResource("/demo-basic-test-01.mdx").getFile();
+		testQueryFile = getClass().getResource("/sample-basic-member-props.mdx").getFile();
 		//testQueryFile = getClass().getResource("/sample-basic-test-1.mdx").getFile();
 	}
 

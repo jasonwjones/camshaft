@@ -2,7 +2,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.saxifrages.hyperion.camshaft</groupId>
 	<artifactId>camshaft</artifactId>
-	<version>1.0.7-SNAPSHOT</version>
+	<version>1.0.8-SNAPSHOT</version>
 	<name>Camshaft MDX Query Tool</name>
 	<description>Camshaft is command-line utility for executing MDX queries against a Hyperion Essbase server and returning the results in a format more conducive to parsing than all of the horsehit that surrounds them in MaxL.</description>
 	<url>http://www.saxifrages.com/products/camshaft</url>
@@ -56,8 +56,8 @@
 		<connection>scm:git:git@github.com:jasonwjones/Camshaft.git</connection>
 		<developerConnection>scm:git:git@github.com:jasonwjones/Camshaft.git</developerConnection>
 		<url>git@github.com:jasonwjones/Camshaft.git</url>
-		<tag>Camshaft-1.0.6</tag>
-	</scm>
+	  <tag>HEAD</tag>
+  </scm>
 
 	<dependencies>
 		<dependency>
@@ -85,6 +85,11 @@
 			<groupId>commons-io</groupId>
 			<artifactId>commons-io</artifactId>
 			<version>2.5</version>
+		</dependency>
+		<dependency>
+			<groupId>com.jasonwjones.jacombi</groupId>
+			<artifactId>jacombi</artifactId>
+			<version>0.0.1-SNAPSHOT</version>
 		</dependency>
 	</dependencies>
 </project>
