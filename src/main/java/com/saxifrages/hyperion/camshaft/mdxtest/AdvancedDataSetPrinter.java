@@ -17,7 +17,9 @@ public class AdvancedDataSetPrinter {
 	
 	public interface Delegate {
 		
-		public void printCell(RenderCell cell);
+		public void printCell(MdxMember member, RenderCell cell);
+		
+		public void printDataCell(RenderCell cell);
 		
 		public void printBlank();
 		
@@ -38,6 +40,8 @@ public class AdvancedDataSetPrinter {
 		private boolean rendered;
 		
 		private int span;
+		
+		private int column;
 		
 		@Override
 		public int getRow() {
@@ -97,10 +101,27 @@ public class AdvancedDataSetPrinter {
 		public void setRenderRow(int renderRow) {
 			this.renderRow = renderRow;
 		}
+
+		@Override
+		public int getColumn() {
+			return column;
+		}
+		
+		public void setColumn(int column) {
+			this.column = column;
+		}
 		
 	}
 	
 	public void print(IEssMdDataSet mdDataSet, AdvancedPrinterConfiguration configuration, Delegate delegate) throws EssException {
+		
+		// formatting properties available per axis:
+		// Dimension (if single or for first, otherwise) Dimension.1, Dimension.2
+		// Member.Name --> Member.2.Name
+		// Properties
+		// Row
+		// Various Columns
+		
 		
 		// product
 		
@@ -114,7 +135,7 @@ public class AdvancedDataSetPrinter {
 		// macro cycle lengths so we know when borders change
 		
 		logger.info("===== Testing CI");
-		CartesianIndex<IEssMdMember[]> ci = new CartesianIndex<IEssMdMember[]>(wrapper, false);
+		CartesianIndex<MdxMember[]> ci = new CartesianIndex<MdxMember[]>(wrapper, false);
 		
 		logger.info("Sizes: {}", ci.getSizes());
 		logger.info("This cycle lengths: {}", ci.getCycleLengths());
@@ -132,14 +153,16 @@ public class AdvancedDataSetPrinter {
 		long[] elementLengths = ci.getElementLengthsReverse();
 		
 		// the for loop will nominally process a row for the cross product of all rows
-		
-		for (List<IEssMdMember[]> line : ci) {
+		for (List<MdxMember[]> line : ci) {
 			BasicRenderCell cell = new BasicRenderCell();
-			cell.setRow(row);			
+			cell.setRow(row);
+			int axis = 0;
 			int col = 0;
-			// each tuple set in the row
-			for (IEssMdMember[] element : line) {
-		
+			// each MdxMember[] we're iterating over corresponds to a column axis
+			// (the array represents tuples from crossjoined dimensions, if any)
+			
+			for (MdxMember[] element : line) {
+				AxisConfiguration axisConf = configuration.getConfiguration(axis);
 //				if (col == 1) {
 //					delegate.finishLine();
 //					for (int spacer = 0; spacer < 1; spacer++) {
@@ -148,21 +171,17 @@ public class AdvancedDataSetPrinter {
 //				}
 				
 				StringBuilder sb = new StringBuilder();
-				for (IEssMdMember member : element) {
-					
+				for (MdxMember member : element) {
 					if (member.isDimension()) {
 						sb.append("!");
 					} 
 					// means if it's an MDX calculation, not if it's a dynamic calc Essbase member
-					if (member.isCalced()) {
+					if (member.isCalculated()) {
 						sb.append("%");
 					}
-					// turns out we don't inherit shit via IEssProperties
-					// sb.append("(" + member.getCountProperties() + ")");
-
 					sb.append(member.getName());
-					sb.append(" ");
-					sb.append("-- " + member.getPropertyValueAny("MEMBER_ALIAS"));
+					sb.append(axisConf.getTupleJoinText());
+					//sb.append("-- " + member.getPropertyValueString("MEMBER_ALIAS"));
 					cell.setSpan((int) elementLengths[col]);
 					cell.setRow(row);
 					cell.setRenderRow(renderRow);
@@ -172,39 +191,53 @@ public class AdvancedDataSetPrinter {
 					} else {
 						cell.setRendered(true);
 					}
+										
 				}
 				cell.setValue(sb.toString());
 				cell.setAxisNumber(col);
-				delegate.printCell(cell); // might want to batch up the entire row in case we want to handle suppression
+				//TODO: should be element[] instead of null
+				delegate.printCell(null, cell); // might want to batch up the entire row in case we want to handle suppression
+
+				// Print properties
+				for (MdxMember member : element) {
+					if (configuration.getConfiguration(axis).isRenderPropertiesToColumns()) {
+						for (String propertyName : member.getPropertyNames()) {
+							BasicRenderCell propertyCell = new BasicRenderCell();
+							propertyCell.setRendered(true);
+							propertyCell.setValue(member.getPropertyValueString(propertyName));
+							propertyCell.setColumn(col);
+							delegate.printCell(member, propertyCell);
+						}
+					}
+				}
 				
 				col++;
 			}
 			
+			axis++;
+			
 			// print data
 			
-			
-			for (int colIndex = 0; colIndex < dataColumns; colIndex++) {
-				//logger.info("Row {} col {}", row, dataColumns);
-				int dataCell = row * dataColumns + colIndex;
-				if (mdDataSet.isMissingCell(dataCell)) {
-					delegate.printBlank();
-				} else if (mdDataSet.isNoAccessCell(dataCell)) {
-					delegate.printBlank();
-				} else {
-					//System.out.println("Cell: " + mdDataSet.getCellValue(dataCell));
-					BasicRenderCell renderDataCell = new BasicRenderCell();
-					renderDataCell.setRendered(true);
-					renderDataCell.setValue(Double.toString(mdDataSet.getCellValue(dataCell)));
-					delegate.printCell(renderDataCell);
+			if (configuration.isPrintData()) {
+				for (int colIndex = 0; colIndex < dataColumns; colIndex++) {
+					int dataCell = row * dataColumns + colIndex;
+					if (mdDataSet.isMissingCell(dataCell)) {
+						delegate.printBlank();
+					} else if (mdDataSet.isNoAccessCell(dataCell)) {
+						delegate.printBlank();
+					} else {
+						BasicRenderCell renderDataCell = new BasicRenderCell();
+						renderDataCell.setRendered(true);
+						renderDataCell.setValue(Double.toString(mdDataSet.getCellValue(dataCell)));
+						renderDataCell.setColumn(colIndex);
+						delegate.printDataCell(renderDataCell);
+					}
 				}
 			}
 			
-			
 			row++;
 			renderRow++;
-			
-			//z    mdDataSet.getC
-			
+						
 			// print footers, if any
 			for (int elementLengthIndex = 0; elementLengthIndex < elementLengths.length; elementLengthIndex++) {
 				if (row % elementLengths[elementLengthIndex] == 0) {

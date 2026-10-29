@@ -7,6 +7,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.charset.Charset;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 
@@ -19,15 +20,16 @@ import com.beust.jcommander.ParameterException;
 import com.essbase.api.base.EssException;
 import com.essbase.api.dataquery.IEssCubeView;
 import com.essbase.api.dataquery.IEssMdDataSet;
-import com.essbase.api.dataquery.IEssMdMember;
 import com.essbase.api.dataquery.IEssOpMdxQuery;
 import com.essbase.api.datasource.IEssCube;
 import com.essbase.api.datasource.IEssOlapServer;
 import com.essbase.api.session.IEssbase;
-import com.jasonwjones.jacombi.CartesianIndex;
 import com.saxifrages.hyperion.camshaft.delegates.HtmlTableOutputDelegate;
 import com.saxifrages.hyperion.camshaft.delegates.PrintStreamCamshaftOutputDelegate;
 import com.saxifrages.hyperion.camshaft.mdxtest.AdvancedDataSetPrinter;
+import com.saxifrages.hyperion.camshaft.mdxtest.AdvancedPrinterConfigurationImpl;
+import com.saxifrages.hyperion.camshaft.mdxtest.AxisConfiguration;
+import com.saxifrages.hyperion.camshaft.mdxtest.AxisConfigurationImpl;
 import com.saxifrages.hyperion.camshaft.mdxtest.MdDataSetWrapper;
 
 /**
@@ -138,22 +140,17 @@ public class Camshaft {
 
 			MdDataSetWrapper wrapper = new MdDataSetWrapper(md);
 			
-			logger.info("Wrapper size: {}", wrapper.size());
-			
-//			for (List<IEssMdMember[]> mbrs : wrapper) {
-//				logger.info("Iterating: {}", mbrs);
-//				for (IEssMdMember[] mbr : mbrs) {
-//					logger.info("  mbr len: {}", mbr.length);
-//					for (IEssMdMember specificMbr : mbr) {
-//						logger.info("    - {}", specificMbr.getName());
-//					}
-//				}
-//			}
-			
-			logger.info("===== Testing CI");
 			AdvancedDataSetPrinter p = new AdvancedDataSetPrinter();
 			TextDataSetDelegate delegate2 = new TextDataSetDelegate();
-			p.print(md, null, delegate2);
+			
+			List<AxisConfiguration> axisConfigurations = new ArrayList<AxisConfiguration>();
+			AxisConfigurationImpl axis = new AxisConfigurationImpl();
+			axis.setRenderPropertiesToColumns(true);
+			axis.setTupleJoinText(" / ");
+			AdvancedPrinterConfigurationImpl conf = new AdvancedPrinterConfigurationImpl(axis);
+			conf.setPrintData(true);
+			
+			p.print(md, conf, delegate2);
 			cubeView.close();
 		} finally {
 			try {

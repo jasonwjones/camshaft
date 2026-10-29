@@ -7,8 +7,8 @@ public class CamshaftTest {
 	public void setUp() throws Exception {
 		//testQueryFile = getClass().getResource("/asosamp-sample-test-03.mdx").getFile();
 		//testQueryFile = getClass().getResource("/demo-basic-test-01.mdx").getFile();
-		testQueryFile = getClass().getResource("/sample-basic-member-props.mdx").getFile();
-		//testQueryFile = getClass().getResource("/sample-basic-test-1.mdx").getFile();
+		//testQueryFile = getClass().getResource("/sample-basic-member-props.mdx").getFile();
+		testQueryFile = getClass().getResource("/sample-basic-test-1.mdx").getFile();
 	}
 
 	public static void main(String[] args) throws Exception {
@@ -19,7 +19,7 @@ public class CamshaftTest {
 
 	public void testMain() throws Exception {
 		String[] args = {
-			"--server=epmvirt11124", 
+			"--server=192.168.2.237", 
 			"--user=admin", 
 			"--password=password", 
 			"--app=Sample", 

@@ -21,6 +21,8 @@ public interface RenderCell {
 	
 	public int getSpan();
 	
+	public int getColumn();
+	
 	// axis number
 	// total axes
 	// is first axis

@@ -10,4 +10,10 @@ public interface AxisConfiguration {
 	
 	public Integer getRowsBelow();
 	
+	public Boolean isRenderPropertiesToColumns();
+	
+	public String getFormatTemplate();
+
+	public String getTupleJoinText();
+	
 }

@@ -15,3 +15,9 @@ MEMBER_ALIAS (Member Alias)
 Ancestor Names
 Level Number
 Gen Number
+
+Output engines:
+	Text/CSV
+	HTML
+	Excel
+	Whatever

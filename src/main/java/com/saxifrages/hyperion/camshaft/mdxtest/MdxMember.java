@@ -10,4 +10,10 @@ public interface MdxMember {
 	
 	public boolean isSynthetic();
 	
+	public String getPropertyValueString(String propertyName);
+	
+	public String[] getPropertyNames();
+	
+	public String getDimensionName();
+	
 }

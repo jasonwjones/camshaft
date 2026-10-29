@@ -15,7 +15,7 @@ import com.essbase.api.dataquery.IEssMdAxis;
 import com.essbase.api.dataquery.IEssMdDataSet;
 import com.essbase.api.dataquery.IEssMdMember;
 
-public class MdDataSetWrapper implements List<List<IEssMdMember[]>> {
+public class MdDataSetWrapper implements List<List<MdxMember[]>> {
 
 	private static final Logger logger = LoggerFactory.getLogger(MdDataSetWrapper.class);
 	
@@ -24,6 +24,10 @@ public class MdDataSetWrapper implements List<List<IEssMdMember[]>> {
 	private int startingAxis;
 
 	private int endingAxis;
+	
+	private boolean treatPropertiesAsSeparateAxis = true;
+	
+	private List<IEssMdAxis> axes;
 	
 	public MdDataSetWrapper(IEssMdDataSet mdDataSet) throws EssException {
 		this.mdDataSet = mdDataSet;
@@ -34,9 +38,11 @@ public class MdDataSetWrapper implements List<List<IEssMdMember[]>> {
 		}
 		this.endingAxis = this.mdDataSet.getAllAxes().length - 1;
 		
-		int axisIndex = 0;
+		
+		int axisIndex = 0; 
+		axes = new ArrayList<IEssMdAxis>();
 		for (IEssMdAxis axis : mdDataSet.getAllAxes()) {
-			logger.info("Processing axis {}", axisIndex);
+			logger.info("Processing axis {}, slicer?: {}", axisIndex, axis.isSlicerAxis());
 			logger.info("Has {} dimensions", axis.getDimensionCount());
 			for (IEssMdMember dimMember : axis.getAllDimensions()) {
 				logger.info("    has dimension {}", dimMember.getName());
@@ -66,8 +72,8 @@ public class MdDataSetWrapper implements List<List<IEssMdMember[]>> {
 	}
 
 	@Override
-	public Iterator<List<IEssMdMember[]>> iterator() {
-		return new Iterator<List<IEssMdMember[]>>(){
+	public Iterator<List<MdxMember[]>> iterator() {
+		return new Iterator<List<MdxMember[]>>(){
 			protected int i = -1;
 			
 			private int size = size();
@@ -78,7 +84,7 @@ public class MdDataSetWrapper implements List<List<IEssMdMember[]>> {
 			}
 
 			@Override
-			public List<IEssMdMember[]> next() {
+			public List<MdxMember[]> next() {
 				i++; 
 				if (i >= size) {
 					throw new NoSuchElementException();
@@ -89,12 +95,21 @@ public class MdDataSetWrapper implements List<List<IEssMdMember[]>> {
 
 	// critical impl
 	@Override
-	public List<IEssMdMember[]> get(int index) {
+	public List<MdxMember[]> get(int index) {
 		try { 
+			// Offset to ignore slicer, if any
 			IEssMdAxis axis = this.mdDataSet.getAllAxes()[this.endingAxis - index];
-			List<IEssMdMember[]> tuples = new ArrayList<IEssMdMember[]>(axis.getTupleCount());
+			List<MdxMember[]> tuples = new ArrayList<MdxMember[]>(axis.getTupleCount());
+			
+			// things we pluck off an axis:
+			// getTupleCount
+			// getAllTupleMembers(int)  --> IEssMdMember[]
+			
+			// depending on axis pre-processing, should be either wrapper on a real IEssMdAxis
+			// or a synthetic axis
+			
 			for (int i = 0; i < axis.getTupleCount(); i++) {
-				tuples.add(axis.getAllTupleMembers(i));
+				tuples.add(MdxEssMember.from(axis.getAllTupleMembers(i)));
 			}
 			/*
 			if (index == 0) {
@@ -134,12 +149,6 @@ public class MdDataSetWrapper implements List<List<IEssMdMember[]>> {
 	}
 
 	@Override
-	public boolean add(List<IEssMdMember[]> e) {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
 	public boolean remove(Object o) {
 		// TODO Auto-generated method stub
 		return false;
@@ -152,13 +161,13 @@ public class MdDataSetWrapper implements List<List<IEssMdMember[]>> {
 	}
 
 	@Override
-	public boolean addAll(Collection<? extends List<IEssMdMember[]>> c) {
+	public boolean addAll(Collection<? extends List<MdxMember[]>> c) {
 		// TODO Auto-generated method stub
 		return false;
 	}
 
 	@Override
-	public boolean addAll(int index, Collection<? extends List<IEssMdMember[]>> c) {
+	public boolean addAll(int index, Collection<? extends List<MdxMember[]>> c) {
 		// TODO Auto-generated method stub
 		return false;
 	}
@@ -185,19 +194,19 @@ public class MdDataSetWrapper implements List<List<IEssMdMember[]>> {
 	/////////////////////////////////////////////////
 	
 	@Override
-	public List<IEssMdMember[]> set(int index, List<IEssMdMember[]> element) {
+	public List<MdxMember[]> set(int index, List<MdxMember[]> element) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public void add(int index, List<IEssMdMember[]> element) {
+	public void add(int index, List<MdxMember[]> element) {
 		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
-	public List<IEssMdMember[]> remove(int index) {
+	public List<MdxMember[]> remove(int index) {
 		// TODO Auto-generated method stub
 		return null;
 	}
@@ -215,21 +224,41 @@ public class MdDataSetWrapper implements List<List<IEssMdMember[]>> {
 	}
 
 	@Override
-	public ListIterator<List<IEssMdMember[]>> listIterator() {
+	public ListIterator<List<MdxMember[]>> listIterator() {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public ListIterator<List<IEssMdMember[]>> listIterator(int index) {
+	public ListIterator<List<MdxMember[]>> listIterator(int index) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public List<List<IEssMdMember[]>> subList(int fromIndex, int toIndex) {
+	public List<List<MdxMember[]>> subList(int fromIndex, int toIndex) {
 		// TODO Auto-generated method stub
 		return null;
 	}
+
+	@Override
+	public boolean add(List<MdxMember[]> e) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+	/*
+	public static class PropertyWrapper implements MdxMember {
+		
+		private IEssMdAxis axis;
+		
+		private String propertyName;
+		
+		public PropertyWrapper(IEssMdAxis axis, String propertyName) {
+			this.axis = axis;
+			this.propertyName = propertyName;
+		}
+		
+	}*/
+	
 	
 }

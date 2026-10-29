@@ -50,5 +50,32 @@ public class MdxEssMember implements MdxMember {
 		}
 		return mdxMembers;
 	}
+
+	@Override
+	public String getPropertyValueString(String propertyName) {
+		try {
+			return member.getPropertyValueAny(propertyName).getString();
+		} catch (EssException e) {
+			throw new RuntimeException("Couldn't get Essbase property", e);
+		}
+	}
 	
+	@Override
+	public String[] getPropertyNames() {
+		try {
+			return member.getPropertyNames();
+		} catch (EssException e) {
+			throw new RuntimeException("Couldn't get Essbase property names", e);
+		}
+	}
+
+	@Override
+	public String getDimensionName() {
+		try {
+			return member.getDimension().getName();
+		} catch (EssException e) {
+			throw new RuntimeException("Couldn't get Essbase dimension for member", e);
+		}
+	}
+
 }
