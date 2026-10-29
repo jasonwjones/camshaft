@@ -1,10 +1,11 @@
 # OS X noise
 .DS_Store
 
-**/*.db
-
 # Maven/Java
 target/
+
+# IDEs
 .classpath
 .project
 .settings/
+.idea/

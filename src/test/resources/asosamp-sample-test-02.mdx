@@ -1,6 +1,0 @@
-SELECT 
-	{[Measures].Levels(0).members} ON COLUMNS,
-	CROSSJOIN({[Jan], [Feb], [Mar]}, {[Curr Year], [Prev Year]}) ON ROWS
-FROM 
-	[ASOSamp].[Sample]
-	

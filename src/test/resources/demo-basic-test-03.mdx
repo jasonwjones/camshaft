@@ -1,8 +1,0 @@
-SELECT
-	Hierarchize([Market].Generations(2).Members) ON Axis(0),
-	NON EMPTY CrossJoin({[Product].[Stereo]}, {[Accounts].[Margin]}) ON Axis(1),
-	NON EMPTY [Year].Generations(3).Members ON Axis(2)
-FROM
-	[Demo.Basic]
-WHERE
-	([Budget])

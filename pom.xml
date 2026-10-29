@@ -1,95 +1,141 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
-	<groupId>com.saxifrages.hyperion.camshaft</groupId>
+	<groupId>com.jasonwjones.hyperion.camshaft</groupId>
 	<artifactId>camshaft</artifactId>
-	<version>1.0.8-SNAPSHOT</version>
-	<name>Camshaft MDX Query Tool</name>
-	<description>Camshaft is command-line utility for executing MDX queries against a Hyperion Essbase server and returning the results in a format more conducive to parsing than all of the horsehit that surrounds them in MaxL.</description>
-	<url>http://www.saxifrages.com/products/camshaft</url>
+	<version>2.0.0-SNAPSHOT</version>
+	<name>Camshaft</name>
+	<description>A command-line tool that runs Essbase MDX queries and writes the results where you want them</description>
+	<url>https://github.com/jasonwjones/camshaft</url>
+	<inceptionYear>2014</inceptionYear>
+
+	<licenses>
+		<license>
+			<name>Apache License, Version 2.0</name>
+			<url>https://www.apache.org/licenses/LICENSE-2.0</url>
+		</license>
+	</licenses>
+
+	<developers>
+		<developer>
+			<name>Jason Jones</name>
+			<url>https://www.jasonwjones.com</url>
+		</developer>
+	</developers>
+
+	<scm>
+		<url>https://github.com/jasonwjones/camshaft</url>
+		<connection>scm:git:https://github.com/jasonwjones/camshaft.git</connection>
+	</scm>
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<maven.compiler.source>1.6</maven.compiler.source>
-		<maven.compiler.target>1.6</maven.compiler.target>
+		<maven.compiler.release>17</maven.compiler.release>
 	</properties>
 
 	<build>
+		<!-- camshaft.properties carries the version that the version option prints -->
+		<resources>
+			<resource>
+				<directory>src/main/resources</directory>
+				<filtering>false</filtering>
+				<excludes>
+					<exclude>**/camshaft.properties</exclude>
+				</excludes>
+			</resource>
+			<resource>
+				<directory>src/main/resources</directory>
+				<filtering>true</filtering>
+				<includes>
+					<include>**/camshaft.properties</include>
+				</includes>
+			</resource>
+		</resources>
 		<plugins>
 			<plugin>
-				<artifactId>maven-assembly-plugin</artifactId>
-				<configuration>
-					<archive>
-						<manifest>
-							<mainClass>com.saxifrages.hyperion.camshaft.Camshaft</mainClass>
-						</manifest>
-					</archive>
-					<descriptorRefs>
-						<descriptorRef>jar-with-dependencies</descriptorRef>
-					</descriptorRefs>
-				</configuration>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>3.15.0</version>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-surefire-plugin</artifactId>
+				<version>3.5.6</version>
+			</plugin>
+			<!-- One runnable jar with everything in it. Services are merged so that
+				java.sql.Driver still names Thriller, and signatures are dropped because
+				they no longer match once the jars are combined. -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-shade-plugin</artifactId>
+				<version>3.6.2</version>
+				<executions>
+					<execution>
+						<phase>package</phase>
+						<goals>
+							<goal>shade</goal>
+						</goals>
+						<configuration>
+							<createDependencyReducedPom>false</createDependencyReducedPom>
+							<transformers>
+								<transformer implementation="org.apache.maven.plugins.shade.resource.ServicesResourceTransformer" />
+								<transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
+									<mainClass>com.jasonwjones.hyperion.camshaft.Camshaft</mainClass>
+								</transformer>
+							</transformers>
+							<filters>
+								<filter>
+									<artifact>*:*</artifact>
+									<excludes>
+										<exclude>META-INF/*.SF</exclude>
+										<exclude>META-INF/*.DSA</exclude>
+										<exclude>META-INF/*.RSA</exclude>
+										<exclude>META-INF/MANIFEST.MF</exclude>
+										<exclude>module-info.class</exclude>
+									</excludes>
+								</filter>
+							</filters>
+						</configuration>
+					</execution>
+				</executions>
 			</plugin>
 		</plugins>
 	</build>
-	
-	<distributionManagement>
-		<repository>
-			<id>nexus-jwj</id>
-			<name>Releases</name>
-			<url>http://nexus.jasonwjones.com:8081/nexus/content/repositories/releases</url>
-		</repository>
-		<snapshotRepository>
-			<id>nexus-jwj</id>
-			<name>Snapshot</name>
-			<url>http://nexus.jasonwjones.com:8081/nexus/content/repositories/snapshots</url>
-		</snapshotRepository>
-	</distributionManagement>
-
-	<repositories>
-		<repository>
-			<id>jwj</id>
-			<name>JWJ Repo</name>
-			<url>http://nexus.jasonwjones.com:8081/nexus/content/repositories/releases/</url>
-		</repository>
-	</repositories>
-	
-	<scm>
-		<connection>scm:git:git@github.com:jasonwjones/Camshaft.git</connection>
-		<developerConnection>scm:git:git@github.com:jasonwjones/Camshaft.git</developerConnection>
-		<url>git@github.com:jasonwjones/Camshaft.git</url>
-	  <tag>HEAD</tag>
-  </scm>
 
 	<dependencies>
+		<!-- Runs the MDX and flattens the results, so Camshaft and any JDBC tool
+			shape them the same way. It brings essbase-rest-client with it. -->
 		<dependency>
-			<groupId>com.saxifrages.essbase</groupId>
-			<artifactId>essbase-utils</artifactId>
-			<version>1.2.2</version>
+			<groupId>com.jasonwjones.hyperion.thriller</groupId>
+			<artifactId>thriller-mdx-jdbc</artifactId>
+			<version>1.1.0</version>
 		</dependency>
 		<dependency>
-			<groupId>com.beust</groupId>
-			<artifactId>jcommander</artifactId>
-			<version>1.35</version>
+			<groupId>com.appliedolap.essbase</groupId>
+			<artifactId>essbase-rest-client</artifactId>
+			<version>2.1.0</version>
 		</dependency>
 		<dependency>
-			<groupId>junit</groupId>
-			<artifactId>junit</artifactId>
-			<version>4.11</version>
+			<groupId>com.fasterxml.jackson.core</groupId>
+			<artifactId>jackson-core</artifactId>
+			<version>2.22.3</version>
+		</dependency>
+		<dependency>
+			<groupId>info.picocli</groupId>
+			<artifactId>picocli</artifactId>
+			<version>4.7.7</version>
+		</dependency>
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-simple</artifactId>
+			<version>2.0.18</version>
+		</dependency>
+		<dependency>
+			<groupId>org.junit.jupiter</groupId>
+			<artifactId>junit-jupiter</artifactId>
+			<version>6.1.3</version>
 			<scope>test</scope>
 		</dependency>
-		<dependency>
-			<groupId>ch.qos.logback</groupId>
-			<artifactId>logback-classic</artifactId>
-			<version>1.1.2</version>
-		</dependency>
-		<dependency>
-			<groupId>commons-io</groupId>
-			<artifactId>commons-io</artifactId>
-			<version>2.5</version>
-		</dependency>
-		<dependency>
-			<groupId>com.jasonwjones.jacombi</groupId>
-			<artifactId>jacombi</artifactId>
-			<version>0.0.1-SNAPSHOT</version>
-		</dependency>
 	</dependencies>
+
 </project>

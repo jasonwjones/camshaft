@@ -1,9 +1,0 @@
-WITH 
-	MEMBER [Scenario].[Var] AS '[Actual] - [Budget]'
-SELECT
-	Hierarchize([Market].Generations(2).Members) ON Axis(0),
-	CrossJoin({[Product].[Stereo], [Product].[Compact_Disc]}, {[Accounts].[Margin]}) ON Axis(1),
-	Union([Year].Generations(3).Members, {[Year].[Qtr1]}) ON Axis(2),
-	{[Scenario].[Budget], [Scenario].[Actual], [Scenario].[Scenario], [Scenario].[Var]} ON Axis(3)	
-FROM
-	[Demo.Basic]
